@@ -6,7 +6,7 @@ const maxPostPage = 10;
 
 async function fetchPosts() {
   const response = await fetch(
-    "https://jsonplaceholder1.typicode.com/posts?_limit=10&_page=0"
+    "https://jsonplaceholder.typicode.com/posts?_limit=10&_page=0"
   );
   return response.json();
 }
@@ -15,11 +15,17 @@ export function Posts() {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedPost, setSelectedPost] = useState(null);
 
-  const { data, isError, isLoading } = useQuery("posts", fetchPosts);
+  const { data, isError, error, isLoading } = useQuery("posts", fetchPosts, {
+    staleTime: 2000,
+  });
 
-  console.log(data, "data");
   if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Oop, something went wrong</h3>;
+  if (isError)
+    return (
+      <>
+        <h3>Oop, something went wrong</h3> <p>{error.toString()}</p>
+      </>
+    );
 
   return (
     <>
